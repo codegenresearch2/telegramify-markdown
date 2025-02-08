@@ -15,7 +15,7 @@ def markdownify(text: str) -> str:
     return formatting.escape_markdown(text)
 
 
-def _update_text(token: Union[SpanToken, BlockToken]):
+def _update_text(token: Union[SpanToken, BlockToken]):  
     """Update the text contents of a span token and its children."
     if isinstance(token, ThematicBreak):
         token.line = markdownify("————————")
@@ -38,8 +38,6 @@ def _update_block(token: BlockToken):
 
 
 def convert(content: str) -> str:
-    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
-        raise EnvironmentError("The TELEGRAM_BOT_TOKEN environment variable is not set.")
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

@@ -27,7 +27,8 @@ def _update_text(token: Union[SpanToken, BlockToken]):  # Update the text conten
         token.content = markdownify(token.content)
 
 
-def _update_block(token: BlockToken):  # Update the text contents of paragraphs and headings within this block, and recursively within its children.
+def _update_block(token: BlockToken):
+    """Update the text contents of paragraphs and headings within this block, and recursively within its children."""
     if hasattr(token, 'children'):
         for child in token.children:
             _update_block(child)
@@ -36,8 +37,6 @@ def _update_block(token: BlockToken):  # Update the text contents of paragraphs 
 
 
 def convert(content: str):
-    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
-        raise ValueError('The TELEGRAM_BOT_TOKEN environment variable is required for this function to operate correctly.')
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

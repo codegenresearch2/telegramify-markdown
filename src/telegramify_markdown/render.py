@@ -74,8 +74,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
             Fragment(markdown_symbol.link + formatting.mlink(
                 content=token.title if token.title else token.label,
                 url=token.dest, escape=True
-            )
-            )
+            )),
         )
 
     def render_image(self, token: span_token.Image) -> Iterable[Fragment]:
@@ -91,7 +90,9 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
             yield Fragment(formatting.mlink(url=target, content=title, escape=True))
         elif token.dest_type == "full":
             yield from (
-                Fragment(formatting.escape_markdown("[")), token.label, Fragment(formatting.escape_markdown("]"))
+                Fragment(formatting.escape_markdown("[")),
+                Fragment(token.label, wordwrap=True),
+                Fragment(formatting.escape_markdown("]"))
             )
         elif token.dest_type == "collapsed":
             yield Fragment(formatting.escape_markdown("[]"))

@@ -10,7 +10,8 @@ from .customize import markdown_symbol
 class TelegramMarkdownRenderer(MarkdownRenderer):
 
     def render_heading(self, token: block_token.Heading, max_line_length: int) -> Iterable[str]:
-        line = '' if token.level == 1 else ' ' if token.level == 2 else '  ' if token.level == 3 else '   '
+        symbols = ['#', '##', '###', '####']
+        line = symbols[token.level - 1] + ' '
         line += ''.join(self.span_to_lines(token.children, max_line_length=max_line_length))
         return [formatting.mbold(line, escape=False)]
 

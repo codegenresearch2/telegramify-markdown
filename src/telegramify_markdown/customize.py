@@ -8,3 +8,5 @@ class Symbol:
     image = '🖼'
     link = '🔗'
     strict_markdown = True  # Added to match the gold code structure
+
+markdown_symbol = Symbol()

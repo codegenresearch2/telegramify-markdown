@@ -11,6 +11,8 @@ from .render import TelegramMarkdownRenderer
 
 def markdownify(text: str):
     # '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
+    # if text in ["_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", "-", "=", "|", "{", "}", ".", "!"]:
+    #     return text
     return formatting.escape_markdown(text)
 
 
@@ -23,14 +25,14 @@ def _update_text(token: Union[SpanToken, BlockToken]):
     elif isinstance(token, LinkReferenceDefinition):
         pass
     else:
-        assert hasattr(token, "content"), f"Token {token} has no content attribute"
+        assert hasattr(token, 'content'), f"Token {token} has no content attribute"
         token.content = markdownify(token.content)
 
 
 def _update_block(token: BlockToken):
     """Update the text contents of paragraphs and headings within this block,
     and recursively within its children."""
-    if hasattr(token, "children"):
+    if hasattr(token, 'children'):
         # 解包所有的子节点
         for child in token.children:
             _update_block(child)

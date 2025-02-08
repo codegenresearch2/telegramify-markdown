@@ -4,13 +4,15 @@ from mistletoe.block_token import BlockToken, ThematicBreak
 from mistletoe.markdown_renderer import LinkReferenceDefinition
 from mistletoe.span_token import SpanToken
 from telebot import formatting
+from typing import Union
+
 
 from .render import TelegramMarkdownRenderer
 
 
 def markdownify(text: str):
     # '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
-    # if text in ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']:
+    # if text in ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']:    
     #     return text
     return formatting.escape_markdown(text)
 

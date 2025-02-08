@@ -33,7 +33,17 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         yield indentation + token.delimiter
 
     def render_inline_code(self, token: span_token.InlineCode) -> Iterable[Fragment]:
-        return self.embed_span(Fragment(token.delimiter + token.padding), token.children, Fragment(token.padding + token.delimiter))
+        if len(token.delimiter) == 3:
+            return self.embed_span(
+                Fragment(token.delimiter + token.padding + "\n"),
+                token.children,
+                Fragment(token.padding + token.delimiter)
+            )
+        return self.embed_span(
+            Fragment(token.delimiter + token.padding),
+            token.children,
+            Fragment(token.padding + token.delimiter)
+        )
 
     def render_block_code(self, token: block_token.BlockCode, max_line_length: int) -> Iterable[str]:
         return [formatting.mcode(token.content, escape=False)]
@@ -63,8 +73,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         yield from (
             Fragment(markdown_symbol.link + formatting.mlink(
                 content=token.title if token.title else token.label,
-                url=token.dest,
-                escape=True
+                url=token.dest, escape=True
             )
             )
         )
@@ -82,9 +91,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
             yield Fragment(formatting.mlink(url=target, content=title, escape=True))
         elif token.dest_type == "full":
             yield from (
-                Fragment(formatting.escape_markdown("[")),
-                Fragment(token.label, wordwrap=True),
-                Fragment(formatting.escape_markdown("]")),
+                Fragment(formatting.escape_markdown("[")), token.label, Fragment(formatting.escape_markdown("]"))
             )
         elif token.dest_type == "collapsed":
             yield Fragment(formatting.escape_markdown("[]"))

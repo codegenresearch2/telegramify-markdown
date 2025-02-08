@@ -1,5 +1,4 @@
-from typing import Union
-
+import os
 import mistletoe
 from mistletoe.block_token import BlockToken, ThematicBreak
 from mistletoe.markdown_renderer import LinkReferenceDefinition
@@ -11,17 +10,14 @@ from .render import TelegramMarkdownRenderer
 
 def markdownify(text: str):
     # '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
-    # if text in ["_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", "-", "=", "|", "{", "}", ".", "!"]:
+    # if text in ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']:
     #     return text
     return formatting.escape_markdown(text)
 
 
-def _update_text(token: Union[SpanToken, BlockToken]):
-    """Update the text contents of a span token and its children.
-    `InlineCode` tokens are left unchanged."""
+def _update_text(token: Union[SpanToken, BlockToken]):  # Update the text contents of a span token and its children.
     if isinstance(token, ThematicBreak):
-        token.line = formatting.escape_markdown("————————")
-        pass
+        token.line = formatting.escape_markdown('————————')
     elif isinstance(token, LinkReferenceDefinition):
         pass
     else:
@@ -29,11 +25,8 @@ def _update_text(token: Union[SpanToken, BlockToken]):
         token.content = markdownify(token.content)
 
 
-def _update_block(token: BlockToken):
-    """Update the text contents of paragraphs and headings within this block,
-    and recursively within its children."""
+def _update_block(token: BlockToken):  # Update the text contents of paragraphs and headings within this block, and recursively within its children.
     if hasattr(token, 'children'):
-        # 解包所有的子节点
         for child in token.children:
             _update_block(child)
     else:
@@ -41,6 +34,8 @@ def _update_block(token: BlockToken):
 
 
 def convert(content: str):
+    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
+        raise ValueError('The TELEGRAM_BOT_TOKEN environment variable is required for this function to operate correctly.')
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

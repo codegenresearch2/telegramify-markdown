@@ -1,1 +1,1 @@
-\n\nCode block\n\n
+Code block

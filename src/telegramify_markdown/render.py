@@ -1,11 +1,8 @@
 from typing import Iterable
-
 from mistletoe import block_token, span_token
 from mistletoe.markdown_renderer import MarkdownRenderer, LinkReferenceDefinition, Fragment
 from telebot import formatting
-
-from .customize import markdown_symbol
-
+from .customize import markdown_symbol, strict_markdown
 
 class TelegramMarkdownRenderer(MarkdownRenderer):
 
@@ -67,9 +64,9 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         return super().render_emphasis(token)
 
     def render_strong(self, token: span_token.Strong) -> Iterable[Fragment]:
-        if token.delimiter == "*":
-            return self.embed_span(Fragment(token.delimiter * 1), token.children)
-        return self.embed_span(Fragment(token.delimiter * 2), token.children)
+        if strict_markdown:
+            return self.embed_span(Fragment(token.delimiter * 2), token.children)
+        return self.embed_span(Fragment(token.delimiter * 1), token.children)
 
     def render_strikethrough(
             self, token: span_token.Strikethrough
@@ -125,7 +122,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_escape_sequence(
             self, token: span_token.EscapeSequence
     ) -> Iterable[Fragment]:
-        yield Fragment("" + token.children[0].content)
+        yield Fragment("\\" + token.children[0].content)
 
     def render_table(
             self, token: block_token.Table, max_line_length: int

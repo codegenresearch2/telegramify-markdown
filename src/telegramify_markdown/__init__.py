@@ -11,6 +11,8 @@ from .render import TelegramMarkdownRenderer
 
 def markdownify(text: str):
     # '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
+    # if text in ["_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", "-", "=", "|", "{", "}", ".", "!"]:
+    #     return text
     return formatting.escape_markdown(text)
 
 
@@ -19,7 +21,6 @@ def _update_text(token: Union[SpanToken, BlockToken]):
     `InlineCode` tokens are left unchanged."""
     if isinstance(token, ThematicBreak):
         token.line = formatting.escape_markdown("————————")
-        pass
     elif isinstance(token, LinkReferenceDefinition):
         pass
     else:

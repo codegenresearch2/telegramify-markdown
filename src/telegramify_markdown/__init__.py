@@ -40,6 +40,9 @@ def _update_block(token: BlockToken):
 
 
 def convert(content: str):
+    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
+        raise ValueError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to proceed with the conversion.")
+    
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

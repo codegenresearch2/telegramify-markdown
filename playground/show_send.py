@@ -37,8 +37,10 @@ converted = telegramify_markdown.convert(md)
 print(converted)
 
 load_dotenv()
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
-chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+if telegram_bot_token is None:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set")
+chat_id = os.getenv("TELEGRAM_CHAT_ID")
 bot = TeleBot(telegram_bot_token)
 bot.send_message(
     chat_id,

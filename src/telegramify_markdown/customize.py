@@ -9,3 +9,4 @@ class Symbol:
     link = "🔗"
 
 markdown_symbol = Symbol()
+strict_markdown = True

@@ -129,6 +129,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
             self, token: span_token.EscapeSequence
     ) -> Iterable[Fragment]:
         # Render escape sequences without re-escaping
+        # because the escape_markdown already happened in the parser, we can skip it here.
         yield Fragment("\\" + token.children[0].content)
 
     def render_table(

@@ -14,6 +14,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     ) -> Iterable[str]:
         """
         Render a heading token.
+        Note: This method does not include word wrapping because atx headings always fit on a single line.
         """
         line = ""
         if token.level == 1:
@@ -87,6 +88,8 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_strong(self, token: span_token.Strong) -> Iterable[Fragment]:
         """
         Render strong text.
+        If strict_markdown is True, render text with double delimiters for strong emphasis.
+        Otherwise, render with single delimiter for bold.
         """
         if strict_markdown:
             return self.embed_span(Fragment(token.delimiter * 2), token.children)
@@ -145,6 +148,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     ) -> Iterable[Fragment]:
         """
         Render either a link or an image.
+        Handle different dest_type cases: uri, angle_uri, full, collapsed.
         """
         title = next(self.span_to_lines(token.children, max_line_length=20), "")
         if token.dest_type == "uri" or token.dest_type == "angle_uri":
@@ -169,6 +173,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     ) -> Iterable[Fragment]:
         """
         Render an escape sequence.
+        Note: The escape_markdown is already handled in the parser, so we skip it here.
         """
         yield Fragment("\\" + token.children[0].content)
 
@@ -177,6 +182,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     ) -> Iterable[str]:
         """
         Render a table.
+        Note: Column widths are not preserved; they are automatically adjusted to fit the contents.
         """
         fs = super().render_table(token, max_line_length)
         return [formatting.mcode("\n".join(fs))]

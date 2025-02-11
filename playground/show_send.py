@@ -4,10 +4,10 @@ from telebot import TeleBot
 import telegramify_markdown
 
 md = """
+- [x] This is a completed task
+- [ ] This is an incomplete task
+
 In all other places characters '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' must be escaped with the preceding character '\\'.
-
-
-In all other places characters '\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' must be escaped with the preceding character '\\'.
 
 *bold \\*text*
 _italic \\*text_
@@ -21,27 +21,31 @@ __underline italic bold___
 ![👍](tg://emoji?id=5368324170671202286)
 `inline fixed-width code`
 
-pre-formatted fixed-width code block
+
+# This is a code block
+print("Hello, world!")
+
+
+> Block quotation started
+> Block quotation continued
+> The last line of the block quotation**
 
 lua
-pre-formatted fixed-width code block written in the Python programming language
+-- This is a code block written in Lua
+print("Hello from Lua!")
 
->Block quotation started
->Block quotation continued
->The last line of the block quotation**
->The second block quotation started right after the previous\r
->The third block quotation started right after the previous
 """
 
 converted = telegramify_markdown.convert(md)
 print(converted)
 
 load_dotenv()
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "default_token")
-if telegram_bot_token == "default_token":
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
+chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
+
+if telegram_bot_token is None:
     raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the script.")
 
-chat_id = os.getenv("TELEGRAM_CHAT_ID")
 bot = TeleBot(telegram_bot_token)
 bot.send_message(
     chat_id,

@@ -12,7 +12,7 @@ from .render import TelegramMarkdownRenderer
 strict_markdown = False
 
 def markdownify(text: str) -> str:
-    """Escape special characters: _, *, [, ], (, ), ~, `, >, #, +, -, =, |, {, }, ., !"""
+    """Escape special characters."""
     special_chars = ["_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", "-", "=", "|", "{", "}", ".", "!"]
     if text in special_chars:
         return text

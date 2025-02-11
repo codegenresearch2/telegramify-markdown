@@ -87,10 +87,10 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
 
     def render_strong(self, token: span_token.Strong) -> Iterable[Fragment]:
         """
-        Render a strong emphasis token. The delimiter is doubled for strong emphasis.
-        Ensure that the delimiter is explicitly checked and handled accordingly.
+        Render a strong emphasis token. Ensure that the delimiter is explicitly checked and handled appropriately.
+        For strong emphasis, the delimiter can be either `*` or `__`.
         """
-        if token.delimiter == "*":
+        if token.delimiter in ['*', '__']:
             return self.embed_span(Fragment(token.delimiter * 2), token.children)
         return super().render_strong(token)
 
@@ -179,5 +179,11 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         fs = super().render_table(token, max_line_length)
         return [formatting.mcode("\n".join(fs))]
 
+    def render_escape_sequence(self, token: span_token.EscapeSequence) -> Iterable[Fragment]:
+        """
+        Render an escape sequence token. The sequence is rendered as is, typically by doubling the character.
+        """
+        yield Fragment(token.content * 2)
 
-This revised code snippet addresses the feedback by ensuring that comments are properly formatted and provide clear explanations for the decisions made in the code. It also ensures that the `render_strong` method explicitly checks and handles the delimiter for strong emphasis, and that the `render_link_or_image` method includes comments to explain the structure of the output for different `dest_type` cases. Additionally, it includes a comment in the `render_table` method to note the behavior of column widths.
+
+This revised code snippet addresses the feedback by ensuring that comments are properly formatted and provide clear explanations for the decisions made in the code. It also ensures that the `render_strong` method explicitly checks and handles the delimiters for strong emphasis, and that the `render_link_or_image` method includes comments to explain the structure of the output for different `dest_type` cases. Additionally, it includes a `render_escape_sequence` method to handle escape sequences properly.

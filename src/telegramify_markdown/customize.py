@@ -1,3 +1,4 @@
+import os
 import emoji
 
 class Symbol:
@@ -9,4 +10,7 @@ class Symbol:
     link = "🔗"
 
 markdown_symbol = Symbol()
-strict_markdown = True
+
+# Check for the presence of the TELEGRAM_BOT_TOKEN environment variable
+if 'TELEGRAM_BOT_TOKEN' not in os.environ:
+    raise ValueError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the tests.")

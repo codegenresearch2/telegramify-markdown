@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from telebot import TeleBot
+
 import telegramify_markdown
 
 md = """
@@ -36,8 +37,12 @@ pre-formatted fixed-width code block written in the Python programming language
 converted = telegramify_markdown.convert(md)
 print(converted)
 
+# Ensure the environment variable is set
 load_dotenv()
 telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
+if telegram_bot_token is None:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the bot.")
+
 chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
 bot = TeleBot(telegram_bot_token)
 bot.send_message(

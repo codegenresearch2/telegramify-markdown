@@ -5,13 +5,16 @@ from telebot import TeleBot
 import telegramify_markdown
 
 md = """
+- [x] Task 1: Ensure all special characters are escaped properly.
+- [ ] Task 2: Add support for task lists with checkboxes.
+- [ ] Task 3: Include ordered and unordered lists.
+- [ ] Task 4: Format block quotes and code blocks correctly.
+- [ ] Task 5: Ensure inline code is presented properly.
+
 In all other places characters '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' must be escaped with the preceding character '\\'.
 
-
-In all other places characters '\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' must be escaped with the preceding character '\\'.
-
-*bold \\*text*
-_italic \\*text_
+*bold *text*
+_italic *text_
 __underline__
 ~strikethrough~
 ||spoiler||
@@ -26,6 +29,7 @@ pre-formatted fixed-width code block
 
 lua
 pre-formatted fixed-width code block written in the Python programming language
+
 
 >Block quotation started
 >Block quotation continued

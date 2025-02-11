@@ -1,5 +1,4 @@
 import emoji
-import os
 
 class Symbol:
     head_level_1 = emoji.emojize(":pushpin:")
@@ -11,6 +10,5 @@ class Symbol:
 
 markdown_symbol = Symbol()
 
-# Ensure TELEGRAM_BOT_TOKEN environment variable is set
-if 'TELEGRAM_BOT_TOKEN' not in os.environ:
-    raise ValueError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the tests.")
+# Ensure strict_markdown is defined and set to True
+strict_markdown = True

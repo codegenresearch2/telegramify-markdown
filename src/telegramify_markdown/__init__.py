@@ -21,7 +21,7 @@ def _update_text(token: Union[SpanToken, BlockToken]):
     if isinstance(token, ThematicBreak):
         token.line = formatting.escape_markdown("————————")
     elif isinstance(token, LinkReferenceDefinition):
-        # Commented out section from gold code
+        # 评论：链接参考定义
         pass
     else:
         assert hasattr(token, "content"), f"Token {token} has no content attribute"
@@ -40,6 +40,9 @@ def _update_block(token: BlockToken):
 
 
 def convert(content: str):
+    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
+        raise ValueError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to proceed with the conversion.")
+    
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

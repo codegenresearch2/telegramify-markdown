@@ -45,14 +45,14 @@ print(converted)
 
 # Ensure the environment variable is set
 load_dotenv()
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "default_token")
-telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", "default_chat_id")
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
+telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
 
-if telegram_bot_token == "default_token":
-    print("Warning: TELEGRAM_BOT_TOKEN environment variable is not set. Using default token.")
+if telegram_bot_token is None:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the bot.")
 
-if telegram_chat_id == "default_chat_id":
-    print("Warning: TELEGRAM_CHAT_ID environment variable is not set. Using default chat ID.")
+if telegram_chat_id is None:
+    raise ValueError("TELEGRAM_CHAT_ID environment variable is not set. Please set it to send messages.")
 
 bot = TeleBot(telegram_bot_token)
 bot.send_message(

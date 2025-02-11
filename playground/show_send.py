@@ -5,13 +5,13 @@ from telebot import TeleBot
 import telegramify_markdown
 
 md = """
-- [x] Task 1: Ensure all special characters are escaped properly.
-- [ ] Task 2: Add support for task lists with checkboxes.
-- [ ] Task 3: Include ordered and unordered lists.
-- [ ] Task 4: Format block quotes and code blocks correctly.
-- [ ] Task 5: Ensure inline code is presented properly.
+- [x] Ensure all special characters are escaped properly.
+- [ ] Add support for task lists with checkboxes.
+- [ ] Include ordered and unordered lists.
+- [ ] Format block quotes and code blocks correctly.
+- [ ] Ensure inline code is presented properly.
 
-In all other places characters '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' must be escaped with the preceding character '\\'.
+In all other places, characters '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' must be escaped with the preceding character '\\'.
 
 *bold *text*
 _italic *text_
@@ -25,7 +25,9 @@ __underline italic bold___
 ![👍](tg://emoji?id=5368324170671202286)
 `inline fixed-width code`
 
+
 pre-formatted fixed-width code block
+
 
 lua
 pre-formatted fixed-width code block written in the Python programming language
@@ -43,17 +45,18 @@ print(converted)
 
 # Ensure the environment variable is set
 load_dotenv()
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
-if telegram_bot_token is None:
-    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the bot.")
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "default_token")
+telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", "default_chat_id")
 
-chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
-if chat_id is None:
-    raise ValueError("TELEGRAM_CHAT_ID environment variable is not set. Please set it to send messages.")
+if telegram_bot_token == "default_token":
+    print("Warning: TELEGRAM_BOT_TOKEN environment variable is not set. Using default token.")
+
+if telegram_chat_id == "default_chat_id":
+    print("Warning: TELEGRAM_CHAT_ID environment variable is not set. Using default chat ID.")
 
 bot = TeleBot(telegram_bot_token)
 bot.send_message(
-    chat_id,
+    telegram_chat_id,
     converted,
     parse_mode="MarkdownV2"
 )

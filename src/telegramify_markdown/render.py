@@ -5,10 +5,16 @@ from telebot import formatting
 from .customize import markdown_symbol, strict_markdown
 
 class TelegramMarkdownRenderer(MarkdownRenderer):
+    """
+    A custom Markdown renderer that formats text for Telegram.
+    """
 
     def render_heading(
             self, token: block_token.Heading, max_line_length: int
     ) -> Iterable[str]:
+        """
+        Render a heading token.
+        """
         line = ""
         if token.level == 1:
             line += markdown_symbol.head_level_1
@@ -29,6 +35,9 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_fenced_code_block(
             self, token: block_token.BlockCode, max_line_length: int
     ) -> Iterable[str]:
+        """
+        Render a fenced code block.
+        """
         indentation = " " * token.indentation
         yield indentation + token.delimiter + token.info_string
         yield from self.prefix_lines(
@@ -37,6 +46,9 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         yield indentation + token.delimiter
 
     def render_inline_code(self, token: span_token.InlineCode) -> Iterable[Fragment]:
+        """
+        Render inline code.
+        """
         if len(token.delimiter) == 3:
             return self.embed_span(
                 Fragment(token.delimiter + token.padding + "\n"),
@@ -52,18 +64,30 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_block_code(
             self, token: block_token.BlockCode, max_line_length: int
     ) -> Iterable[str]:
+        """
+        Render a block code.
+        """
         return [formatting.mcode(token.content, escape=False)]
 
     def render_setext_heading(
             self, token: block_token.SetextHeading, max_line_length: int
     ) -> Iterable[str]:
+        """
+        Render a setext heading.
+        """
         yield from self.span_to_lines(token.children, max_line_length=max_line_length)
         yield formatting.escape_markdown("——" * 5)
 
     def render_emphasis(self, token: span_token.Emphasis) -> Iterable[Fragment]:
+        """
+        Render emphasis.
+        """
         return super().render_emphasis(token)
 
     def render_strong(self, token: span_token.Strong) -> Iterable[Fragment]:
+        """
+        Render strong text.
+        """
         if strict_markdown:
             return self.embed_span(Fragment(token.delimiter * 2), token.children)
         return self.embed_span(Fragment(token.delimiter * 1), token.children)
@@ -71,11 +95,17 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_strikethrough(
             self, token: span_token.Strikethrough
     ) -> Iterable[Fragment]:
+        """
+        Render strikethrough text.
+        """
         return self.embed_span(Fragment("~"), token.children)
 
     def render_list_item(
             self, token: block_token.ListItem, max_line_length: int
     ) -> Iterable[str]:
+        """
+        Render a list item.
+        """
         if str(token.leader).strip().endswith("."):
             token.leader = formatting.escape_markdown(token.leader) + " "
         else:
@@ -85,6 +115,9 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_link_reference_definition(
             self, token: LinkReferenceDefinition
     ) -> Iterable[Fragment]:
+        """
+        Render a link reference definition.
+        """
         yield from (
             Fragment(markdown_symbol.link + formatting.mlink(
                 content=token.title if token.title else token.label,
@@ -95,15 +128,24 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         )
 
     def render_image(self, token: span_token.Image) -> Iterable[Fragment]:
+        """
+        Render an image.
+        """
         yield Fragment(markdown_symbol.image)
         yield from self.render_link_or_image(token, token.src)
 
     def render_link(self, token: span_token.Link) -> Iterable[Fragment]:
+        """
+        Render a link.
+        """
         return self.render_link_or_image(token, token.target)
 
     def render_link_or_image(
             self, token: span_token.SpanToken, target: str
     ) -> Iterable[Fragment]:
+        """
+        Render either a link or an image.
+        """
         title = next(self.span_to_lines(token.children, max_line_length=20), "")
         if token.dest_type == "uri" or token.dest_type == "angle_uri":
             yield Fragment(formatting.mlink(url=target, content=title, escape=True))
@@ -117,15 +159,24 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
             yield Fragment(formatting.escape_markdown("[]"))
 
     def render_auto_link(self, token: span_token.AutoLink) -> Iterable[Fragment]:
+        """
+        Render an auto link.
+        """
         yield Fragment(formatting.escape_markdown("<") + token.children[0].content + formatting.escape_markdown(">"))
 
     def render_escape_sequence(
             self, token: span_token.EscapeSequence
     ) -> Iterable[Fragment]:
+        """
+        Render an escape sequence.
+        """
         yield Fragment("\\" + token.children[0].content)
 
     def render_table(
             self, token: block_token.Table, max_line_length: int
     ) -> Iterable[str]:
+        """
+        Render a table.
+        """
         fs = super().render_table(token, max_line_length)
         return [formatting.mcode("\n".join(fs))]

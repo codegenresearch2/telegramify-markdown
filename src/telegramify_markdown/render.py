@@ -128,7 +128,13 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         Returns:
             Iterable[Fragment]: An iterable of fragments representing the rendered strong emphasis.
         """
-        return self.embed_span(Fragment(token.delimiter * 2), token.children)
+        # Ensure the delimiter is handled correctly based on the context
+        if token.delimiter == "*":
+            return self.embed_span(Fragment(token.delimiter * 2), token.children)
+        elif token.delimiter == "_":
+            return self.embed_span(Fragment(token.delimiter * 2), token.children)
+        else:
+            raise ValueError("Invalid delimiter for strong emphasis")
 
     def render_strikethrough(self, token: span_token.Strikethrough) -> Iterable[Fragment]:
         """

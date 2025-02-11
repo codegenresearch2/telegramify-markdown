@@ -8,7 +8,7 @@ class Symbol:
     image = "🖼"
     link = "🔗"
 
-# Moved the strict_markdown variable outside of the class definition
+# Declare strict_markdown after the class definition
 strict_markdown = True
 
 markdown_symbol = Symbol()

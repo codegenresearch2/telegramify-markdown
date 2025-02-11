@@ -9,7 +9,5 @@ class Symbol(object):
     link = "🔗"
 
 # Define the strict_markdown variable outside of the class
-strict_markdown = True
-
-# Ensure the order of variable definitions matches the gold code
 markdown_symbol = Symbol()
+strict_markdown = True

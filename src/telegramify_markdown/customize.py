@@ -11,3 +11,7 @@ class Symbol(object):
 # Define the strict_markdown variable after the class definition
 markdown_symbol = Symbol()
 strict_markdown = True
+
+# Set the TELEGRAM_BOT_TOKEN environment variable for testing purposes
+import os
+os.environ['TELEGRAM_BOT_TOKEN'] = 'your_test_token_here'

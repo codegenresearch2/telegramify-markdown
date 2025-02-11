@@ -1,27 +1,29 @@
 import os
 from dotenv import load_dotenv
 from telebot import TeleBot
+
 import telegramify_markdown
 
 md = """
-In all other places characters '*' and '_' must be escaped with the preceding character '\'.
-
-\\*bold text\\*
-\\_italic text\\_
-\\_\\_underline\\_\\_
-\\~strikethrough\\~
-\\|\\|spoiler\\|\\|
-\\*bold \\_italic bold \\~italic bold strikethrough \\|\\|italic bold strikethrough spoiler\\|\\~ \\_\\_underline italic bold\\_\\_ bold\\*
-\\_\\_underline italic bold\\_\\_
-\\[inline URL\\](http://www.example.com/)
-\\[inline mention of a user\\](tg://user?id=123456789)
-!\\[👍\\](tg://emoji?id=5368324170671202286)
+- [ ] Task 1
+- [ ] Task 2
+*bold *text*
+_italic *text_
+__underline__
+~strikethrough~
+||spoiler||
+*bold _italic bold ~italic bold strikethrough ||italic bold strikethrough spoiler||~ __underline italic bold___ bold*
+__underline italic bold___
+[inline URL](http://www.example.com/)
+[inline mention of a user](tg://user?id=123456789)
+![👍](tg://emoji?id=5368324170671202286)
 `inline fixed-width code`
 
 pre-formatted fixed-width code block
 
 lua
 pre-formatted fixed-width code block written in the Python programming language
+
 
 >Block quotation started
 >Block quotation continued
@@ -34,7 +36,13 @@ print(converted)
 
 load_dotenv()
 telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
+if telegram_bot_token is None:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set")
+
 chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
+if chat_id is None:
+    raise ValueError("TELEGRAM_CHAT_ID environment variable is not set")
+
 bot = TeleBot(telegram_bot_token)
 bot.send_message(
     chat_id,

@@ -10,8 +10,8 @@ from telebot import formatting
 from .render import TelegramMarkdownRenderer
 
 
-def markdownify(text: str):
-    # Escape the following characters: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
+def markdownify(text: str) -> str:
+    """Escape the following characters: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'."""
     return formatting.escape_markdown(text)
 
 
@@ -37,7 +37,10 @@ def _update_block(token: BlockToken):
         _update_text(token)
 
 
-def convert(content: str):
+def convert(content: str) -> str:
+    if 'TELEGRAM_BOT_TOKEN' not in os.environ or not os.environ['TELEGRAM_BOT_TOKEN']:
+        raise EnvironmentError("The TELEGRAM_BOT_TOKEN environment variable is not set or is empty.")
+    
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

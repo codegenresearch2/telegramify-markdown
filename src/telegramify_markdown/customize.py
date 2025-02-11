@@ -7,5 +7,6 @@ class Symbol:
     head_level_4 = emoji.emojize(":bookmark:")  # 📒
     image = "🖼"
     link = "🔗"
+    strict_markdown = True  # Enable strict markdown mode
 
 markdown_symbol = Symbol()

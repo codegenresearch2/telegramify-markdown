@@ -10,7 +10,7 @@ from telebot import formatting
 from .render import TelegramMarkdownRenderer
 
 
-def markdownify(text: str):
+def markdownify(text: str) -> str:
     """
     Escape special markdown characters in the given text.
     Characters being escaped: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
@@ -44,7 +44,7 @@ def _update_block(token: BlockToken):
         _update_text(token)
 
 
-def convert(content: str):
+def convert(content: str) -> str:
     """
     Convert the given markdown content to a format suitable for Telegram.
     """

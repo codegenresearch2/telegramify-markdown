@@ -10,12 +10,18 @@ from .render import TelegramMarkdownRenderer
 
 
 def markdownify(text: str):
+    """
+    Escape special markdown characters in the given text.
+    This function escapes the following characters: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
+    """
     return formatting.escape_markdown(text)
 
 
 def _update_text(token: Union[SpanToken, BlockToken]):
-    """Update the text contents of a span token and its children.
-    `InlineCode` tokens are left unchanged."""
+    """
+    Update the text contents of a span token and its children.
+    `InlineCode` tokens are left unchanged.
+    """
     if isinstance(token, ThematicBreak):
         token.line = formatting.escape_markdown("————————")
     elif isinstance(token, LinkReferenceDefinition):
@@ -26,8 +32,10 @@ def _update_text(token: Union[SpanToken, BlockToken]):
 
 
 def _update_block(token: BlockToken):
-    """Update the text contents of paragraphs and headings within this block,
-    and recursively within its children."""
+    """
+    Update the text contents of paragraphs and headings within this block,
+    and recursively within its children.
+    """
     if hasattr(token, "children"):
         for child in token.children:
             _update_block(child)
@@ -36,6 +44,14 @@ def _update_block(token: BlockToken):
 
 
 def convert(content: str):
+    """
+    Convert the given markdown content to a format suitable for Telegram.
+    This function checks for the presence of the `TELEGRAM_BOT_TOKEN` environment variable
+    and raises an exception if it is not set.
+    """
+    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
+        raise EnvironmentError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to proceed.")
+    
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

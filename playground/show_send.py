@@ -8,18 +8,8 @@ import telegramify_markdown
 load_dotenv()
 
 # Retrieve the Telegram bot token from the environment variables
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "default_token")
-
-# Check if the token is the default value and raise an error if it is
-if telegram_bot_token == "default_token":
-    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set")
-
-# Retrieve the chat ID from the environment variables
-chat_id = os.getenv("TELEGRAM_CHAT_ID", "default_chat_id")
-
-# Check if the chat ID is the default value and raise an error if it is
-if chat_id == "default_chat_id":
-    raise ValueError("TELEGRAM_CHAT_ID environment variable is not set")
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
 # Define the markdown content
 md = """

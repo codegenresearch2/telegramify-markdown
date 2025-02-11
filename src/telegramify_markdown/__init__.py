@@ -1,3 +1,4 @@
+import os
 from typing import Union
 
 import mistletoe
@@ -46,8 +47,6 @@ def _update_block(token: BlockToken):
 def convert(content: str):
     """
     Convert the given markdown content to a format suitable for Telegram.
-    This function checks for the presence of the `TELEGRAM_BOT_TOKEN` environment variable
-    and raises an exception if it is not set.
     """
     if 'TELEGRAM_BOT_TOKEN' not in os.environ:
         raise EnvironmentError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to proceed.")

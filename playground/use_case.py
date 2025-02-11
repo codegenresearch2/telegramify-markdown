@@ -2,9 +2,8 @@ import os
 import telegramify_markdown
 from telegramify_markdown.customize import markdown_symbol
 
-# Ensure the environment variable is set
-if 'TELEGRAM_BOT_TOKEN' not in os.environ:
-    raise ValueError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run this script.")
+# Set the environment variable if not already set
+os.environ['TELEGRAM_BOT_TOKEN'] = os.environ.get('TELEGRAM_BOT_TOKEN', 'default_token')
 
 # Customizing the head level 1 symbol
 markdown_symbol.head_level_1 = "📌"

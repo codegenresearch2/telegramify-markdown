@@ -11,7 +11,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     ) -> Iterable[str]:
         """
         Render a heading token. The heading level is determined by the token's level attribute.
-        The heading text is processed to ensure proper formatting.
+        There is no word wrapping for atx headings as they always fit on a single line.
         """
         line = ""
         if token.level == 1:
@@ -87,8 +87,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
 
     def render_strong(self, token: span_token.Strong) -> Iterable[Fragment]:
         """
-        Render a strong emphasis token. Ensure that the delimiter is explicitly checked and handled appropriately.
-        For strong emphasis, the delimiter can be either `*` or `__`.
+        Render a strong emphasis token. For strong emphasis, the delimiters can be either `*` or `__`.
         """
         if token.delimiter in ['*', '__']:
             return self.embed_span(Fragment(token.delimiter * 2), token.children)
@@ -182,6 +181,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_escape_sequence(self, token: span_token.EscapeSequence) -> Iterable[Fragment]:
         """
         Render an escape sequence token. The sequence is rendered as is, typically by doubling the character.
+        Since the escape_markdown has already been handled in the parser, we can skip it here.
         """
         yield Fragment(token.content * 2)
 

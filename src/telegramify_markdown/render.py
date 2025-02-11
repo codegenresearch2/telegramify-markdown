@@ -124,8 +124,8 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_escape_sequence(
             self, token: span_token.EscapeSequence
     ) -> Iterable[Fragment]:
-        # Skip rendering escape sequences as they are already escaped
-        pass
+        # Yield the content of the children to ensure the rendering process continues
+        yield from token.children
 
     def render_table(
             self, token: block_token.Table, max_line_length: int

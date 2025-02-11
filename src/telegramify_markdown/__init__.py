@@ -13,7 +13,7 @@ from .render import TelegramMarkdownRenderer
 def markdownify(text: str):
     """
     Escape special markdown characters in the given text.
-    This function escapes the following characters: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
+    Characters being escaped: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
     """
     return formatting.escape_markdown(text)
 
@@ -21,7 +21,7 @@ def markdownify(text: str):
 def _update_text(token: Union[SpanToken, BlockToken]):
     """
     Update the text contents of a span token and its children.
-    `InlineCode` tokens are left unchanged.
+    InlineCode tokens are left unchanged.
     """
     if isinstance(token, ThematicBreak):
         token.line = formatting.escape_markdown("————————")

@@ -48,6 +48,9 @@ if telegram_bot_token is None:
     raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the bot.")
 
 chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
+if chat_id is None:
+    raise ValueError("TELEGRAM_CHAT_ID environment variable is not set. Please set it to send messages.")
+
 bot = TeleBot(telegram_bot_token)
 bot.send_message(
     chat_id,

@@ -49,7 +49,7 @@ def convert(content: str):
     Convert the given markdown content to a format suitable for Telegram.
     """
     if 'TELEGRAM_BOT_TOKEN' not in os.environ:
-        raise EnvironmentError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to proceed.")
+        return "Error: The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to proceed."
     
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)

@@ -11,6 +11,12 @@ load_dotenv()
 telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
+# Check if the token and chat ID are set, if not, raise an error
+if telegram_bot_token is None:
+    raise ValueError("The TELEGRAM_BOT_TOKEN environment variable must be set.")
+if chat_id is None:
+    raise ValueError("The TELEGRAM_CHAT_ID environment variable must be set.")
+
 # Define the markdown content
 md = """
 - [x] Task 1

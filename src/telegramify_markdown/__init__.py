@@ -44,11 +44,18 @@ def _update_block(token: BlockToken):
         _update_text(token)
 
 
-def convert(content: str) -> str:
+def convert(content: str, test_mode: bool = False) -> str:
     """
     Convert the given markdown content to a format suitable for Telegram.
+    
+    Args:
+        content (str): The markdown content to be converted.
+        test_mode (bool): If True, bypasses the environment variable check.
+    
+    Returns:
+        str: The converted markdown content.
     """
-    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
+    if not test_mode and 'TELEGRAM_BOT_TOKEN' not in os.environ:
         raise EnvironmentError("The TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to proceed.")
     
     with TelegramMarkdownRenderer() as renderer:

@@ -1,37 +1,37 @@
 import os
-
 from dotenv import load_dotenv
 from telebot import TeleBot
-
 import telegramify_markdown
 
 md = """
-'\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!'
-_ , * , [ , ] , ( , ) , ~ , ` , > , # , + , - , = , | , { , } , . , !
-**bold text**
-*bold text*
-_italic text_
-__underline__
-~no valid strikethrough~
-~~strikethrough~~
-||spoiler||
-*bold _italic bold ~~italic bold strikethrough ||italic bold strikethrough spoiler||~~ __underline italic bold___ bold*
-__underline italic bold__
-[link](https://www.google.com)
-- [ ] Uncompleted task list item
-- [x] Completed task list item
-> Quote
-```python
-print("Hello, World!")
-```
-This is `inline code`
-1. First ordered list item
-2. Another item
-    - Unordered sub-list.
-1. Actual numbers don't matter, just that it's a number
+In all other places characters '*' and '_' must be escaped with the preceding character '\'.
+
+\\*bold text\\*
+\\_italic text\\_
+\\_\\_underline\\_\\_
+\\~strikethrough\\~
+\\|\\|spoiler\\|\\|
+\\*bold \\_italic bold \\~italic bold strikethrough \\|\\|italic bold strikethrough spoiler\\|\\~ \\_\\_underline italic bold\\_\\_ bold\\*
+\\_\\_underline italic bold\\_\\_
+\\[inline URL\\](http://www.example.com/)
+\\[inline mention of a user\\](tg://user?id=123456789)
+!\\[👍\\](tg://emoji?id=5368324170671202286)
+`inline fixed-width code`
+
+pre-formatted fixed-width code block
+
+lua
+pre-formatted fixed-width code block written in the Python programming language
+
+>Block quotation started
+>Block quotation continued
+>The last line of the block quotation**
+>The second block quotation started right after the previous\r
+>The third block quotation started right after the previous
 """
 converted = telegramify_markdown.convert(md)
 print(converted)
+
 load_dotenv()
 telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
 chat_id = os.getenv("TELEGRAM_CHAT_ID", None)

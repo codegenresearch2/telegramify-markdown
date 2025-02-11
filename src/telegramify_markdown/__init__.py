@@ -10,6 +10,11 @@ from telebot import formatting
 from .render import TelegramMarkdownRenderer
 
 
+def markdownify(text: str) -> str:
+    """Escape markdown characters in the given text."""
+    return formatting.escape_markdown(text)
+
+
 def _update_text(token: Union[SpanToken, BlockToken]):
     """Update the text contents of a span token and its children.
     `InlineCode` tokens are left unchanged."""
@@ -19,12 +24,7 @@ def _update_text(token: Union[SpanToken, BlockToken]):
         pass
     else:
         assert hasattr(token, "content"), f"Token {token} has no content attribute"
-        if token.delimiter == "*":
-            token.content = formatting.mbold(token.content)
-        elif token.delimiter == "_":
-            token.content = formatting.mitalic(token.content)
-        else:
-            token.content = formatting.escape_markdown(token.content)
+        token.content = markdownify(token.content)
 
 
 def _update_block(token: BlockToken):

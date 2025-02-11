@@ -7,18 +7,11 @@ import telegramify_markdown
 # Load environment variables from .env file
 load_dotenv()
 
-# Retrieve the Telegram bot token from the environment variables
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
-chat_id = os.getenv("TELEGRAM_CHAT_ID")
-
-# Check if the token and chat ID are set, if not, raise an error
-if telegram_bot_token is None:
-    raise ValueError("The TELEGRAM_BOT_TOKEN environment variable must be set.")
-if chat_id is None:
-    raise ValueError("The TELEGRAM_CHAT_ID environment variable must be set.")
-
 # Define the markdown content
 md = """
+# Heading 1
+## Heading 2
+### Heading 3
 - [x] Task 1
 - [ ] Task 2
 *bold *text*
@@ -31,23 +24,28 @@ __underline italic bold___
 [inline URL](http://www.example.com/)
 [inline mention of a user](tg://user?id=123456789)
 ![👍](tg://emoji?id=5368324170671202286)
-`inline fixed-width code`
+
+# Inline code block
+print("Hello, world!")
+
+
 
 pre-formatted fixed-width code block
 
-lua
-pre-formatted fixed-width code block written in the Python programming language
 
->Block quotation started
->Block quotation continued
->The last line of the block quotation**
->The second block quotation started right after the previous\r
->The third block quotation started right after the previous
+> Block quotation started
+> Block quotation continued
+> The last line of the block quotation
+
 """
 
 # Convert the markdown content
 converted = telegramify_markdown.convert(md)
 print(converted)
+
+# Retrieve the Telegram bot token and chat ID from the environment variables
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
 # Initialize the Telegram bot and send the message
 bot = TeleBot(telegram_bot_token)

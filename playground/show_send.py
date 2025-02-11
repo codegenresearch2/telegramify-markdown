@@ -34,17 +34,20 @@ __underline italic bold___
 - This is an unordered list item
 - This is another unordered list item
 
-lua
--- This is a code block written in Lua
-print("Hello from Lua!")
+python
+# This is a code block written in Python
+print("Hello, world!")
 """
 
 converted = telegramify_markdown.convert(md)
 print(converted)
 
 load_dotenv()
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "default_token")
-chat_id = os.getenv("TELEGRAM_CHAT_ID", "default_chat_id")
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
+chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
+
+if telegram_bot_token is None:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set. Please set it to run the script.")
 
 bot = TeleBot(telegram_bot_token)
 bot.send_message(

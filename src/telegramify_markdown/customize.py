@@ -7,6 +7,8 @@ class Symbol:
     head_level_4 = emoji.emojize(":bookmark:")
     image = "🖼"
     link = "🔗"
-    strict_markdown = True  # Added to match the gold code structure
+
+# Moved the strict_markdown variable outside of the class definition
+strict_markdown = True
 
 markdown_symbol = Symbol()

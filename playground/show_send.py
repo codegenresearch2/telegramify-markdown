@@ -4,8 +4,22 @@ from telebot import TeleBot
 
 import telegramify_markdown
 
+# Load environment variables from .env file
+load_dotenv()
+
+# Retrieve the Telegram bot token from the environment variables
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "default_token")
+if telegram_bot_token is None:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set")
+
+# Retrieve the chat ID from the environment variables
+chat_id = os.getenv("TELEGRAM_CHAT_ID", "default_chat_id")
+if chat_id is None:
+    raise ValueError("TELEGRAM_CHAT_ID environment variable is not set")
+
+# Define the markdown content
 md = """
-- [ ] Task 1
+- [x] Task 1
 - [ ] Task 2
 *bold *text*
 _italic *text_
@@ -24,25 +38,18 @@ pre-formatted fixed-width code block
 lua
 pre-formatted fixed-width code block written in the Python programming language
 
-
 >Block quotation started
 >Block quotation continued
 >The last line of the block quotation**
 >The second block quotation started right after the previous\r
 >The third block quotation started right after the previous
 """
+
+# Convert the markdown content
 converted = telegramify_markdown.convert(md)
 print(converted)
 
-load_dotenv()
-telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", None)
-if telegram_bot_token is None:
-    raise ValueError("TELEGRAM_BOT_TOKEN environment variable is not set")
-
-chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
-if chat_id is None:
-    raise ValueError("TELEGRAM_CHAT_ID environment variable is not set")
-
+# Initialize the Telegram bot and send the message
 bot = TeleBot(telegram_bot_token)
 bot.send_message(
     chat_id,

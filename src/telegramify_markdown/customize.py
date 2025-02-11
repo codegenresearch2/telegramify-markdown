@@ -1,3 +1,4 @@
+import os
 import emoji
 
 class Symbol(object):

@@ -6,6 +6,10 @@ from telegramify_markdown.customize import markdown_symbol
 markdown_symbol.head_level_1 = "📌"
 markdown_symbol.link = "🔗"
 
+# Ensure the bot token is set
+if 'TELEGRAM_BOT_TOKEN' not in os.environ:
+    os.environ['TELEGRAM_BOT_TOKEN'] = 'your_valid_token_here'
+
 # Define the markdown content
 md = """
 # Heading Level 1

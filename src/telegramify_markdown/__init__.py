@@ -1,3 +1,4 @@
+import os
 from typing import Union
 
 import mistletoe
@@ -10,6 +11,7 @@ from .render import TelegramMarkdownRenderer
 
 
 def markdownify(text: str):
+    """Escape the following characters: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'."""
     return formatting.escape_markdown(text)
 
 
@@ -28,18 +30,14 @@ def _update_text(token: Union[SpanToken, BlockToken]):
 def _update_block(token: BlockToken):
     """Update the text contents of paragraphs and headings within this block,
     and recursively within its children."""
-    if hasattr(token, "children"):
-        # Unpack all children
-        for child in token.children:
-            _update_block(child)
+    # Unpack all children
+    for child in token.children:
+        _update_block(child)
     else:
         _update_text(token)
 
 
 def convert(content: str):
-    if 'TELEGRAM_BOT_TOKEN' not in os.environ:
-        raise EnvironmentError("The TELEGRAM_BOT_TOKEN environment variable is not set.")
-    
     with TelegramMarkdownRenderer() as renderer:
         document = mistletoe.Document(content)
         _update_block(document)

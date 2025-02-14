@@ -3,16 +3,15 @@ from typing import Iterable
 from mistletoe import block_token, span_token
 from mistletoe.markdown_renderer import MarkdownRenderer, LinkReferenceDefinition, Fragment
 from telebot import formatting
-
 from .customize import markdown_symbol
 
+import markdownify
 
 class TelegramMarkdownRenderer(MarkdownRenderer):
 
     def render_heading(
             self, token: block_token.Heading, max_line_length: int
     ) -> Iterable[str]:
-        # note: no word wrapping, because atx headings always fit on a single line.
         line = ""
         if token.level == 1:
             line += markdown_symbol.head_level_1
@@ -25,7 +24,7 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
         fs = super().span_to_lines(token.children, max_line_length=max_line_length)
         text = next(fs, "")
         if text:
-            line += " " + text
+            line += " " + markdownify.markdownify(text)
         if token.closing_sequence:
             line += " " + token.closing_sequence
         return [formatting.mbold(line, escape=False)]
@@ -56,23 +55,20 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     def render_block_code(
             self, token: block_token.BlockCode, max_line_length: int
     ) -> Iterable[str]:
-        return [formatting.mcode(token.content, escape=False)]
+        return [formatting.mcode(markdownify.markdownify(token.content), escape=False)]
 
     def render_setext_heading(
             self, token: block_token.SetextHeading, max_line_length: int
     ) -> Iterable[str]:
         yield from self.span_to_lines(token.children, max_line_length=max_line_length)
-        yield formatting.escape_markdown("——" * 5)
+        yield markdownify.markdownify("——" * 5)
 
     def render_emphasis(self, token: span_token.Emphasis) -> Iterable[Fragment]:
+        token.delimiter = "_"
         return super().render_emphasis(token)
 
     def render_strong(self, token: span_token.Strong) -> Iterable[Fragment]:
-        # Telegram strong: *text* but __text__ for emphasis, so we need to check the delimiter
-        if token.delimiter == "*":
-            return self.embed_span(Fragment(token.delimiter * 1), token.children)
-        # __
-        return self.embed_span(Fragment(token.delimiter * 2), token.children)
+        return self.embed_span(Fragment(token.delimiter * 1), token.children)
 
     def render_strikethrough(
             self, token: span_token.Strikethrough
@@ -83,9 +79,9 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
             self, token: block_token.ListItem, max_line_length: int
     ) -> Iterable[str]:
         if str(token.leader).strip().endswith("."):
-            token.leader = formatting.escape_markdown(token.leader) + " "
+            token.leader = markdownify.markdownify(token.leader) + " "
         else:
-            token.leader = formatting.escape_markdown("⦁")
+            token.leader = markdownify.markdownify("⦁")
         return super().render_list_item(token, max_line_length)
 
     def render_link_reference_definition(
@@ -112,37 +108,23 @@ class TelegramMarkdownRenderer(MarkdownRenderer):
     ) -> Iterable[Fragment]:
         title = next(self.span_to_lines(token.children, max_line_length=20), "")
         if token.dest_type == "uri" or token.dest_type == "angle_uri":
-            # "[" description "](" dest_part [" " title] ")"
-            # "[" description "](" dest_part [" " title] ")"
-            yield Fragment(formatting.mlink(url=target, content=title, escape=True)
-                           )
+            yield Fragment(formatting.mlink(url=target, content=title, escape=True))
         elif token.dest_type == "full":
-            # "[" description "][" label "]"
             yield from (
-                Fragment(formatting.escape_markdown("[")),
+                Fragment(markdownify.markdownify("["), wordwrap=True),
                 Fragment(token.label, wordwrap=True),
-                Fragment(formatting.escape_markdown("]")),
+                Fragment(markdownify.markdownify("]")),
             )
         elif token.dest_type == "collapsed":
-            # "[" description "][]"
-            yield Fragment(formatting.escape_markdown("[]")),
+            yield Fragment(markdownify.markdownify("[]"))
         else:
-            # "[" description "]"
             pass
 
     def render_auto_link(self, token: span_token.AutoLink) -> Iterable[Fragment]:
-        yield Fragment(formatting.escape_markdown("<") + token.children[0].content + formatting.escape_markdown(">"))
-
-    def render_escape_sequence(
-            self, token: span_token.EscapeSequence
-    ) -> Iterable[Fragment]:
-        # 渲染转义字符
-        # because the escape_markdown already happened in the parser, we can skip it here.
-        yield Fragment("" + token.children[0].content)
+        yield Fragment(markdownify.markdownify("<") + token.children[0].content + markdownify.markdownify(">"))
 
     def render_table(
             self, token: block_token.Table, max_line_length: int
     ) -> Iterable[str]:
-        # note: column widths are not preserved; they are automatically adjusted to fit the contents.
         fs = super().render_table(token, max_line_length)
-        return [formatting.mcode("\n".join(fs))]
+        return [formatting.mcode(markdownify.markdownify("\n".join(fs)))]
